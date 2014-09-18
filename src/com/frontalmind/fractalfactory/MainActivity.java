@@ -65,15 +65,43 @@ public class MainActivity extends Activity {
 	    Uri contentUri = Uri.fromFile(f);
 	    mediaScanIntent.setData(contentUri);
 	    this.sendBroadcast(mediaScanIntent);
-
 	}
+	
+	private void sendFractal()
+	{
+		File imageFile = this.mGLSurfaceView.getImage();
+		if (imageFile == null){
+			Log.e("bob", "Image File not created.");
+			return;
+		}
+			
+		File f = new File(imageFile.getAbsolutePath());
+	    Uri contentUri = Uri.fromFile(f);
+	    
+        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+        String[] recipients = new String[]{"my@email.com", "",};
+        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients);
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Test");
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "This is email's message");
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+
+        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+        finish();
+
+		
+	   
+	}
+	
 	
 	@Override
 	public boolean onOptionsItemSelected (MenuItem item) 
 	{
 	       switch (item.getItemId()){
            case R.id.menu_save:
-           saveFractal();
+        	   saveFractal();
+           case R.id.menu_send:
+        	   sendFractal();
            break;
      }
      return true;
